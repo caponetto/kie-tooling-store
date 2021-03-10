@@ -15,10 +15,8 @@ node('rhel8'){
 
     stage('Test - Upload VSIX files to staging')
     def vsix = findFiles(glob: '**.vsix')
-    sh "rsync -Pzrlt --rsh=ssh --protocol=28 ${vsix[0].path} ${UPLOAD_LOCATION}/kie/staging"
-    sh "rsync -Pzrlt --rsh=ssh --protocol=28 ${vsix[1].path} ${UPLOAD_LOCATION}/kie/staging"
-    sh "rsync -Pzrlt --rsh=ssh --protocol=28 ${vsix[2].path} ${UPLOAD_LOCATION}/kie/staging"
     stash name:'vsix'
+    archive includes:"**.vsix"
 }
 
 node('rhel8'){
@@ -32,7 +30,6 @@ node('rhel8'){
         def vsix = findFiles(glob: '**.vsix')
         sh 'npm install -g vsce'
         // publish
-        archive includes:"**.vsix"
     }// if publishToMarketPlace
 }
 
@@ -47,6 +44,5 @@ node('rhel8'){
         def vsix = findFiles(glob: '**.vsix')
         sh "npm install -g ovsx"
         // publish
-        archive includes:"**.vsix"
     }// if publishToOVSX
 }
