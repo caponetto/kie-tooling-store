@@ -24,7 +24,7 @@ node('rhel8'){
 
 node('rhel8'){
     if(publishToMarketPlace.equals('true')){
-        timeout(time:5, unit:'DAYS') {
+        timeout(time:1, unit:'DAYS') {
             input message:'Approve deployment?', submitter: 'gcaponet,tfernand'
         }
 
@@ -42,7 +42,7 @@ node('rhel8'){
 
 node('rhel8'){
     if(publishToOVSX.equals('true')){
-        timeout(time:5, unit:'DAYS') {
+        timeout(time:1, unit:'DAYS') {
             input message:'Approve deployment?', submitter: 'gcaponet,tfernand'
         }
 
