@@ -1,19 +1,19 @@
 #!/usr/bin/env groovy
 
 node('rhel8'){
-    stage 'Install build requirements'
+    stage 'Test - Install build requirements'
     def nodeHome = tool 'nodejs-12.13.1'
     env.PATH="${env.PATH}:${nodeHome}/bin"
     sh 'node -v'
     sh 'npm -v'
 
-    stage 'Download VSIX'
+    stage 'Test - Download VSIX'
     sh 'wget "https://github.com/kiegroup/kie-tooling-store/releases/download/$VERSION/vscode_extension_bpmn_editor_$VERSION.vsix"'
     sh 'wget "https://github.com/kiegroup/kie-tooling-store/releases/download/$VERSION/vscode_extension_dmn_editor_$VERSION.vsix"'
     sh 'wget "https://github.com/kiegroup/kie-tooling-store/releases/download/$VERSION/vscode_extension_red_hat_business_automation_bundle_$VERSION.vsix"'
     sh 'md5sum *.vsix'
 
-    stage 'Upload VSIX files to staging'
+    stage 'Test - Upload VSIX files to staging'
     def vsix = findFiles(glob: '**.vsix')
     sh "rsync -Pzrlt --rsh=ssh --protocol=28 ${vsix[0].path} ${UPLOAD_LOCATION}/kie/staging"
     sh "rsync -Pzrlt --rsh=ssh --protocol=28 ${vsix[1].path} ${UPLOAD_LOCATION}/kie/staging"
@@ -27,7 +27,7 @@ node('rhel8'){
             input message:'Approve deployment?', submitter: 'gcaponet,tfernand'
         }
 
-        stage "Publish to VS Code Marketplace"
+        stage "Test - Publish to VS Code Marketplace"
         unstash 'vsix'
         def vsix = findFiles(glob: '**.vsix')
         sh 'npm install -g vsce'
@@ -42,7 +42,7 @@ node('rhel8'){
             input message:'Approve deployment?', submitter: 'gcaponet'
         }
 
-        stage "Publish to Open-vsx Marketplace"
+        stage "Test - Publish to Open-vsx Marketplace"
         unstash 'vsix'
         def vsix = findFiles(glob: '**.vsix')
         sh "npm install -g ovsx"
