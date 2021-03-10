@@ -17,7 +17,7 @@ node('rhel8'){
 
     stage('Archive VSIX files') {
         def vsix = findFiles(glob: '**.vsix')
-        stash name:'vsix'
+        stash name:'vsix', includes: '**.vsix'
         archiveArtifacts artifacts: '**.vsix'
     }
 }
