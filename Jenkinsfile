@@ -33,9 +33,9 @@ node('rhel8'){
             def vsix = findFiles(glob: '**.vsix')
             sh 'npm install -g vsce'
             // publish here
-            sh 'echo ' + ${vsix[0].path}
-            sh 'echo ' + ${vsix[1].path}
-            sh 'echo ' + ${vsix[2].path}
+            echo vsix[0].path
+            echo vsix[1].path
+            echo vsix[2].path
         }
     }
 }
@@ -51,9 +51,9 @@ node('rhel8'){
             def vsix = findFiles(glob: '**.vsix')
             sh "npm install -g ovsx"
             // publish here
-            sh 'echo ' + ${vsix[0].path}
-            sh 'echo ' + ${vsix[1].path}
-            sh 'echo ' + ${vsix[2].path}
+            echo vsix[0].path
+            echo vsix[1].path
+            echo vsix[2].path
         }
     }
 }
