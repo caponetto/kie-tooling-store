@@ -39,7 +39,7 @@ node('rhel8'){
 node('rhel8'){
     if(publishToOVSX.equals('true')){
         timeout(time:5, unit:'DAYS') {
-            input message:'Approve deployment?', submitter: 'gcaponet,tfernand'
+            input message:'Approve deployment?', submitter: 'gcaponet'
         }
 
         stage "Publish to Open-vsx Marketplace"
