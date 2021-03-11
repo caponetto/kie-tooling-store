@@ -20,31 +20,33 @@ node('rhel8'){
         archiveArtifacts artifacts: '**.vsix'
     }
 
-    timeout(time:1, unit:'DAYS') {
-        input message:'Approve deployment?', submitter: 'gcaponet,tfernand'
-    }
-
-    if(publishToMarketPlace.equals('true')) {
-        stage('Publish to VS Code Marketplace') {
-            unstash 'vsix'
-            def vsix = findFiles(glob: '**.vsix')
-            sh 'npm install -g vsce'
-            // publish here
-            echo vsix[0].path
-            echo vsix[1].path
-            echo vsix[2].path
+    if(publishToMarketPlace || publishToOVSX) {
+        timeout(time:1, unit:'DAYS') {
+            input message:'Approve deployment?', submitter: 'gcaponet,tfernand'
         }
-    }
 
-    if(publishToOVSX.equals('true')) {
-        stage('Publish to Open-vsx Marketplace') {
-            unstash 'vsix'
-            def vsix = findFiles(glob: '**.vsix')
-            sh "npm install -g ovsx"
-            // publish here
-            echo vsix[0].path
-            echo vsix[1].path
-            echo vsix[2].path
+        if(publishToMarketPlace) {
+            stage('Publish to VS Code Marketplace') {
+                unstash 'vsix'
+                def vsix = findFiles(glob: '**.vsix')
+                sh 'npm install -g vsce'
+                // publish here
+                echo vsix[0].path
+                echo vsix[1].path
+                echo vsix[2].path
+            }
+        }
+
+        if(publishToOVSX) {
+            stage('Publish to Open-vsx Marketplace') {
+                unstash 'vsix'
+                def vsix = findFiles(glob: '**.vsix')
+                sh "npm install -g ovsx"
+                // publish here
+                echo vsix[0].path
+                echo vsix[1].path
+                echo vsix[2].path
+            }
         }
     }
 }
