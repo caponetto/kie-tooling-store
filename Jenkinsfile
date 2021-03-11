@@ -20,12 +20,12 @@ node('rhel8'){
         archiveArtifacts artifacts: '**.vsix'
     }
 
-    if(publishToMarketPlace || publishToOVSX) {
+    if(publishToMarketPlace.equals('true') || publishToOVSX.equals('true')) {
         timeout(time:1, unit:'DAYS') {
             input message:'Approve deployment?', submitter: 'gcaponet,tfernand'
         }
 
-        if(publishToMarketPlace) {
+        if(publishToMarketPlace.equals('true')) {
             stage('Publish to VS Code Marketplace') {
                 unstash 'vsix'
                 def vsix = findFiles(glob: '**.vsix')
@@ -37,7 +37,7 @@ node('rhel8'){
             }
         }
 
-        if(publishToOVSX) {
+        if(publishToOVSX.equals('true')) {
             stage('Publish to Open-vsx Marketplace') {
                 unstash 'vsix'
                 def vsix = findFiles(glob: '**.vsix')
