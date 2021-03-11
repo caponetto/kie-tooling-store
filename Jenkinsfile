@@ -27,7 +27,6 @@ node('rhel8'){
 
         if(publishToMarketPlace.equals('true')) {
             stage('Publish to VS Code Marketplace') {
-                unstash 'vsix'
                 def vsix = findFiles(glob: '**.vsix')
                 sh 'npm install -g vsce'
                 // publish here
@@ -39,7 +38,6 @@ node('rhel8'){
 
         if(publishToOVSX.equals('true')) {
             stage('Publish to Open-vsx Marketplace') {
-                unstash 'vsix'
                 def vsix = findFiles(glob: '**.vsix')
                 sh "npm install -g ovsx"
                 // publish here
