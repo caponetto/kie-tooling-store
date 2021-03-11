@@ -25,28 +25,30 @@ node('rhel8') {
         timeout(time:1, unit:'DAYS') {
             input message:'Approve deployment?', submitter: 'gcaponet,tfernand'
         }
+        
+        def vsix_editors = findFiles(glob: '**editor*.vsix')
+        def vsix_redhat_bundle = findFiles(glob: '**red_hat*.vsix')
+        def vsix_kogito_bundle = findFiles(glob: '**kogito*.vsix')
 
         if (publishToMarketPlace.equals('true')) {
             stage('Publish to VS Code Marketplace') {
-                def vsix = findFiles(glob: '**.vsix')
                 sh 'npm install -g vsce'
                 // publish here
-                echo "bpmn: " + vsix[0].path
-                echo "dmn: " + vsix[1].path
-                echo "redhat: " +vsix[2].path
-                echo "kogito: " + vsix[3].path
+                echo "bpmn: " + vsix_editors[0].path
+                echo "dmn: " + vsix_editors[1].path
+                echo "redhat: " + vsix_redhat_bundle[0].path
+                echo "kogito: " + vsix_kogito_bundle[0].path
             }
         }
 
         if (publishToOVSX.equals('true')) {
             stage('Publish to Open-vsx Marketplace') {
-                def vsix = findFiles(glob: '**.vsix')
                 sh "npm install -g ovsx"
                 // publish here
-                echo "bpmn: " + vsix[0].path
-                echo "dmn: " + vsix[1].path
-                echo "redhat: " +vsix[2].path
-                echo "kogito: " + vsix[3].path
+                echo "bpmn: " + vsix_editors[0].path
+                echo "dmn: " + vsix_editors[1].path
+                echo "redhat: " + vsix_redhat_bundle[0].path
+                echo "kogito: " + vsix_kogito_bundle[0].path
             }
         }
     }
