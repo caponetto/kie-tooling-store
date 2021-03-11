@@ -1,7 +1,7 @@
 #!/usr/bin/env groovy
 
 node('rhel8'){
-    stage('Install requirements'){
+    stage('Install requirements') {
         def nodeHome = tool 'nodejs-12.13.1'
         env.PATH="${env.PATH}:${nodeHome}/bin"
         sh 'node -v'
@@ -17,17 +17,14 @@ node('rhel8'){
 
     stage('Archive VSIX files') {
         def vsix = findFiles(glob: '**.vsix')
-        stash name:'vsix', includes: '**.vsix'
         archiveArtifacts artifacts: '**.vsix'
     }
-}
 
-node('rhel8'){
-    if(publishToMarketPlace.equals('true')){
-        timeout(time:1, unit:'DAYS') {
-            input message:'Approve deployment?', submitter: 'gcaponet,tfernand'
-        }
+    timeout(time:1, unit:'DAYS') {
+        input message:'Approve deployment?', submitter: 'gcaponet,tfernand'
+    }
 
+    if(publishToMarketPlace.equals('true')) {
         stage('Publish to VS Code Marketplace') {
             unstash 'vsix'
             def vsix = findFiles(glob: '**.vsix')
@@ -38,14 +35,8 @@ node('rhel8'){
             echo vsix[2].path
         }
     }
-}
 
-node('rhel8'){
-    if(publishToOVSX.equals('true')){
-        timeout(time:1, unit:'DAYS') {
-            input message:'Approve deployment?', submitter: 'gcaponet,tfernand'
-        }
-
+    if(publishToOVSX.equals('true')) {
         stage('Publish to Open-vsx Marketplace') {
             unstash 'vsix'
             def vsix = findFiles(glob: '**.vsix')
